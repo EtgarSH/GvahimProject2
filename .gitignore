@@ -1,6 +1,10 @@
+# Jedit files
 *.asm~
+
+# Assembler (Compiler) Files
 *.map
 *.exe
 *.obj
+
+# Personal Scripts
 *.bat
-*.test
