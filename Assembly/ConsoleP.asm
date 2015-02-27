@@ -1,10 +1,10 @@
 ;------------------------------------------
-; File   :  Console.asm
+; File   :  ConsoleProc.asm
 ; Author :  Etgar Shmueli
 ; Date   :  25/02/15
 ;------------------------------------------
 
-proc Write ; dl is the character to print
+proc WriteProc ; dl is the character to print
 	push ax
 	
 	mov ah, 2
@@ -12,9 +12,9 @@ proc Write ; dl is the character to print
 	
 	pop ax
 	ret
-endp Write
+endp WriteProc
 
-proc WriteSeq ; dx is the offset of string
+proc WriteSeqProc ; dx is the offset of string
 	push ax
 	
 	mov ah, 9
@@ -22,23 +22,23 @@ proc WriteSeq ; dx is the offset of string
 	pop ax
 	
 	ret
-endp WriteSeq
+endp WriteSeqProc
 
-proc WriteLine ; dx is the offset of string
+proc WriteLineProc ; dx is the offset of string
 	push ax
 	
 	push dx
 	mov dl, 10
-	call Write
+	call WriteProc
 	pop dx
 	
 	mov ah, 9
 	int 21h
 	pop ax
 	ret
-endp WriteLine
+endp WriteLineProc
 
-proc ReadLine ; dx - offset of buffer
+proc ReadLineProc ; dx - offset of buffer
 	push ax
 	push dx
 	
@@ -46,19 +46,19 @@ proc ReadLine ; dx - offset of buffer
 	int 21h
 	
 	mov dl, 10
-	call Write
+	call WriteProc
 	
 	pop dx
 	pop ax
 	ret
-endp ReadLine
+endp ReadLineProc
 
-proc ReadKey ; returns in al the key ASCII code
+proc ReadKeyProc ; returns in al the key ASCII code
 	push dx
 	push ax
 	
 	mov dl, 10
-	call Write
+	call WriteProc
 	
 	mov ah, 8
 	int 21h
@@ -74,9 +74,9 @@ proc ReadKey ; returns in al the key ASCII code
 	mov cx, [bp]
 	pop dx
 	ret
-endp ReadKey
+endp ReadKeyProc
 
-proc EnterVGAMode
+proc EnterVGAModeProc
 	push ax
 	
 	mov ax, 012h
@@ -84,9 +84,9 @@ proc EnterVGAMode
 	
 	pop ax
 	ret
-endp EnterVGAMode
+endp EnterVGAModeProc
 
-proc SetBackgroundColor ; bl - Color
+proc SetBackgroundColorProc ; bl - Color
 	push ax
 	push bx
 	
@@ -98,4 +98,4 @@ proc SetBackgroundColor ; bl - Color
 	pop bx
 	pop ax
 	ret
-endp SetBackgroundColor
+endp SetBackgroundColorProc
