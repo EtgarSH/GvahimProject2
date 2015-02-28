@@ -13,17 +13,41 @@ macro GetLength Array; returns length in cl
 	pop bx
 endm GetLength
 
-macro AddElement Array, Element
-	push dx
+macro NewArray Location, Len ; Location - of array
 	push bx
-
-	mov bx, Array
-	mov dl, Element
-	call AddElement
-
+	push cx
+	
+	mov bx, Location
+	mov cx, Len
+	call NewArrayProc
+	
+	pop cx
 	pop bx
+endm NewArray
+
+macro ClearArray Array
+	push bx
+	
+	mov bx, Array
+	call ClearArrayProc
+	
+	pop bx
+endm ClearArray
+
+macro SetElement Array, Index, Elem
+	push bx
+	push si
+	push dx
+	
+	mov bx, Index
+	mov si, Index
+	mov dl, Elem
+	call SetElementProc
+	
 	pop dx
-endp AddElement
+	pop si
+	pop bx
+endm SetElement
 
 macro Sort Array
 	push bx

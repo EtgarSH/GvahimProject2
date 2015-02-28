@@ -8,12 +8,7 @@ proc IndexOutOfRangeException
 	int 2
 endp IndexOutOfRangeException
 
-proc GetLengthProc ; bx - offset of array, returns length in cl
-	mov cl, [byte ptr bx]
-	ret
-endp GetLengthProc
-
-proc GetElementProc ; bx - offset of array. si - index. returns the element in al.
+proc CheckOutOfRange ; bx - array. si - index.
 	push cx
 	push si
 	
@@ -24,33 +19,66 @@ proc GetElementProc ; bx - offset of array. si - index. returns the element in a
 	call IndexOutOfRangeException
 	
 NotOutOfRange:
+	pop si
+	pop cx
+	ret
+endp CheckOutOfRange
+
+proc NewArrayProc ; bx - offset. cl - length.
+	mov [byte ptr bx], cl
+	call ClearArrayProc
+	ret
+endp NewArrayProc
+
+proc ClearArrayProc ; bx - offset
+	push cx
+	push bx
+	
+	call GetLengthProc
+	xor ch, ch
+	
+	inc bx
+ClearArrayLoop:
+	mov [byte ptr bx], 0
+	inc bx
+	loop ClearArrayLoop
+	
+	pop bx
+	pop cx
+	ret
+endp ClearArrayProc
+
+proc GetLengthProc ; bx - offset of array, returns length in cl
+	mov cl, [byte ptr bx]
+	ret
+endp GetLengthProc
+
+proc GetElementProc ; bx - offset of array. si - index. returns the element in al.
+	push cx
+	push si
+	
+	call CheckOutOfRange
+	
 	inc si
-	mov al, [byte ptr bx+si	
+	mov al, [byte ptr bx+si]
 
 	pop si
 	pop cx
 	ret
 endp GetElementProc
 
-proc AddElementProc ; bx - offset of array; dl - element
-	push ax
-	push bx
-	push cx
+proc SetElementProc ; bx - offset. si - index. dl - element.
+	push si
 	
-	call GetLengthProc
+	call CheckOutOfRange
 	
-	inc [byte ptr bx]
-	xor ch, ch
-	add bx, cx
+	inc si
+	mov [byte ptr bx+si], dl
 	
-	inc bx
-	mov [byte ptr bx], dl
+	pop si
 	
-	pop cx
-	pop bx
-	pop ax
 	ret
-endp AddElementProc
+endp SetELementProc
 
 proc BubbleSort ; bx - offset of array
 	push ax
