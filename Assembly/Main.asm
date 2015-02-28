@@ -1,8 +1,9 @@
 IDEAL
 MODEL small
 STACK 100h
-DATASEGs
-
+DATASEG
+	myArrayDS db 21 dup(?)
+	myArray equ offset myArrayDS
 CODESEG
 
 include "ConsoleM.asm"
@@ -12,8 +13,10 @@ start:
 	mov ax, @data
 	mov ds, ax
 	
+	NewArray myArray, 20
 	
-	WriteSeq HelloWorld
+	SetElement myArray, 0, 15
+	PrintArray myArray
 	
 exit:
 	mov ax, 4c00h

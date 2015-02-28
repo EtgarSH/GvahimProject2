@@ -16,7 +16,7 @@ proc CheckOutOfRange ; bx - array. si - index.
 	call GetLengthProc
 	dec cl
 	xor ch, ch
-	cmp si, cl
+	cmp si, cx
 	jl NotOutOfRange
 	call IndexOutOfRangeException
 	
