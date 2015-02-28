@@ -1,18 +1,12 @@
 IDEAL
 MODEL small
 STACK 100h
-DATASEG
-
-	stringDS db 'joifjdog$'
-	
-	HelloDS db 'Hello World$'
-	
-	string equ offset stringDS
-	HelloWorld equ offset HelloDS
+DATASEGs
 
 CODESEG
 
 include "ConsoleM.asm"
+include "ArraysM.asm"
 
 start:
 	mov ax, @data
