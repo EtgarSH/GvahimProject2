@@ -62,11 +62,27 @@ macro Sum Array ; returns in al the sum of the array
 	push bx
 	
 	mov bx, Array
-	call sumProc
+	call SumProc
 	
 	pop bx
 endm Sum
 
-; Write the average and print array macros...
+macro Average Array
+	push bx
+	
+	mov bx, Array
+	call AverageProc
+	
+	pop bx
+endm Average
+
+macro PrintArray Array
+	push bx
+	
+	mov bx, Array
+	call PrintArrayProc
+	
+	pop bx
+endm PrintArray
 
 include "ArraysP.asm"

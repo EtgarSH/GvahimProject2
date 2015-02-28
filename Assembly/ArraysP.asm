@@ -149,11 +149,11 @@ EndSum:
 	ret
 endp sumProc
 
-proc Average ; bx - offset of the array, returns ax - average
-	call Sum
+proc AverageProc ; bx - offset of the array, returns ax - average
+	call sumProc
 	cmp al, 0
 	jz EmptyArrayAVG
-	call Sum
+	call sumProc
 	xor ah, ah
 	call GetLengthProc
 	
@@ -164,9 +164,9 @@ EmptyArrayAVG:
 	xor ax, ax
 EndAverage:
 	ret
-endp Average
+endp AverageProc
 
-proc PrintArray; bx is the offset of the array
+proc PrintArrayProc ; bx is the offset of the array
 	push cx
 	push dx
 	push bx
@@ -191,4 +191,4 @@ EndPrintArray:
 	pop dx
 	pop cx
 	ret
-endp PrintArray
+endp PrintArrayProc
