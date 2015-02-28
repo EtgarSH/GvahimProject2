@@ -69,6 +69,10 @@ proc GetElementProc ; bx - offset of array. si - index. returns the element in a
 	ret
 endp GetElementProc
 
+proc GetWordProc ; coming soon
+	
+endp GetWordProc
+
 proc SetElementProc ; bx - offset. si - index. dl - element.
 	push si
 	

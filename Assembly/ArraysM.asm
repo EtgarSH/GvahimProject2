@@ -49,6 +49,16 @@ macro SetElement Array, Index, Elem
 	pop bx
 endm SetElement
 
+macro GetElement Array, Index; returns element in al
+	push si
+	push bx
+	
+	call GetElementProc
+	
+	pop bx
+	pop si
+endm GetElement
+
 macro Sort Array
 	push bx
 	
