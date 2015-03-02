@@ -8,7 +8,7 @@ macro GetLength Array; returns length in cl
 	push bx
 	
 	mov bx, Array
-	call GetLength
+	call GetLength ;Shouldn't it be GetLengthProc?
 	
 	pop bx
 endm GetLength
