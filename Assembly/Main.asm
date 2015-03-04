@@ -120,20 +120,8 @@ start:
 		cmp dh,0
 		je error_tab
 		
-		check_vale_range 'a', 'f',al 
-		cmp dl,1h
-		je change_letters 
 		
-		check_vale_range 'A', 'F',al 
-		cmp dl,1h
-		je find_letter 
 		
-		check_vale_range '0', '9',al 
-		cmp dl,1h
-		je find_number 
-		
-		change_letters:
-		sub al,20h
 		
 	end_part_two:
 exit:
