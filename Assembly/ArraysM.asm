@@ -8,7 +8,7 @@ macro GetLength Array; returns length in cl
 	push bx
 	
 	mov bx, Array
-	call GetLength
+	call GetLengthProc
 	
 	pop bx
 endm GetLength
@@ -18,7 +18,7 @@ macro NewArray Location, Len ; Location - of array
 	push cx
 	
 	mov bx, Location
-	mov cx, Len
+	mov cl, Len
 	call NewArrayProc
 	
 	pop cx
@@ -38,25 +38,31 @@ macro SetElement Array, Index, Elem
 	push bx
 	push si
 	push dx
+	push ax
 	
-	mov bx, Index
-	mov si, Index
+	mov bx, Array
+	mov al, Index
+	xor ah, ah
+	mov si, ax
 	mov dl, Elem
 	call SetElementProc
 	
+	pop ax
 	pop dx
 	pop si
 	pop bx
 endm SetElement
 
 macro GetElement Array, Index; returns element in al
-	push si
+	push cx
 	push bx
 	
+	mov bx, Array
+	mov cl, Index
 	call GetElementProc
 	
 	pop bx
-	pop si
+	pop cx
 endm GetElement
 
 macro Sort Array
@@ -94,5 +100,3 @@ macro PrintArray Array
 	
 	pop bx
 endm PrintArray
-
-include "ArraysP.asm"

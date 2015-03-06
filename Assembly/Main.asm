@@ -2,7 +2,10 @@ IDEAL
 MODEL small
 STACK 100h
 DATASEG
-	myArrayDS db 21 dup(?)
+	myMatrixDS db 100 dup(?)
+	myMatrix equ offset myMatrixDS
+	
+	myArrayDS db 11 dup(?)
 	myArray equ offset myArrayDS
 	arrayLegh equ 21
 	
@@ -18,6 +21,7 @@ CODESEG
 
 include "ConsoleM.asm"
 include "ArraysM.asm"
+include "MatrixM.asm"
 
 macro print_space
 	push ax
@@ -59,10 +63,10 @@ start:
 	mov ax, @data
 	mov ds, ax
 	
-	NewArray myArray, 20
-	
-	SetElement myArray, 0, 15
-	PrintArray myArray
+	NewMatrix myMatrix, 4, 3
+	GetNode myMatrix, 0, 0
+	add al, 30h
+	Write al
 	
 	;Part 2
 	part_2:
@@ -127,6 +131,10 @@ start:
 exit:
 	mov ax, 4c00h
 	int 21h
+	
+include "ConsoleP.asm"
+include "ArraysP.asm"
+include "MatrixP.asm"
 
 proc print_matrix_indexProc
 	

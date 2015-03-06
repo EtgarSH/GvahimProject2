@@ -56,5 +56,3 @@ macro SetBackgroundColor Color
 	
 	pop bx
 endm SetBackgroundColor
-
-include "ConsoleP.asm"
