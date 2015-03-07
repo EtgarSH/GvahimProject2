@@ -43,9 +43,9 @@ macro check_vale_range minVal, maxVal, Val
 	ja false
 	mov dl,1
 	jmp end_check_vale_range
-	false:
+false:
 	xor dl,dl
-	end_check_vale_range:
+end_check_vale_range:
 	pop ax
 endm
 
@@ -69,7 +69,7 @@ start:
 	Write al
 	
 	;Part 2
-	part_2:
+part_2:
 	ReadLine part_2_input
 	mov al,[part_2_inputDS +1]
 	cmp al,3
@@ -91,43 +91,43 @@ start:
 	je end_part_two
 	jmp check_vale
 	
-	error_tab:
+error_tab:
 	WriteLine error_message
 	jmp part_2
 	
-	print_matrix_index:
-		call print_matrix_indexProc
-		jmp part_2
-	print_num_Of_shows:
-		call get_num_of_showsProc
-		jmp part_2
-	print_max_value:
-		call get_max_valueProc
-		print_space
-		Writ dl
-		down_line
-		jmp part_2
+print_matrix_index:
+	call print_matrix_indexProc
+	jmp part_2
+print_num_Of_shows:
+	call get_num_of_showsProc
+	jmp part_2
+print_max_value:
+	call get_max_valueProc
+	print_space
+	Writ dl
+	down_line
+	jmp part_2
 	print_min_value:
-		call get_min_valueProc
-		print_space
-		Writ dl
-		down_line
-		jmp part_2
-	check_vale:
-		xor dx,dx
-		check_vale_range '0', '9',al 
-		add dh,dl
-		check_vale_range 'A', 'F',al 
-		add dh,dl
-		check_vale_range 'a', 'f',al 
-		add dh,dl
-		cmp dh,0
-		je error_tab
+	call get_min_valueProc
+	print_space
+	Writ dl
+	down_line
+	jmp part_2
+check_vale:
+	xor dx,dx
+	check_vale_range '0', '9',al 
+	add dh,dl
+	check_vale_range 'A', 'F',al 
+	add dh,dl
+	check_vale_range 'a', 'f',al 
+	add dh,dl
+	cmp dh,0
+	je error_tab
+	
+	
 		
-		
-		
-		
-	end_part_two:
+	
+end_part_two:
 exit:
 	mov ax, 4c00h
 	int 21h
@@ -152,14 +152,14 @@ proc get_max_valueProc ;Returns the max value of shows in dl
 	xor bx,bx
 	xor dl,dl
 	mov cx,[arrayLegh]
-	find_max_loop:
-		cmp dl,[myArray +bx]
-		jb new_max
-		jmp end_max_loop
-		new_max:
-			mov dl, [myArray+bx]
-		end_max_loop:
-		inc bx
+find_max_loop:
+	cmp dl,[myArray +bx]
+	jb new_max
+	jmp end_max_loop
+new_max:
+	mov dl, [myArray+bx]
+	end_max_loop:
+	inc bx
 	loop find_max_loop
 	pop bx
 	pop cx
@@ -172,15 +172,16 @@ proc get_min_valueProc ;Returns the max value of shows in dl
 	xor bx,bx
 	xor dl,dl
 	mov cx,[arrayLegh]
-	find_min_loop:
-		cmp dl,[myArray +bx]
-		jb new_min
-		jmp end_min_loop
-		new_min:
-			mov dl, [myArray+bx]
-		end_min_loop:
-		inc bx
+find_min_loop:
+	cmp dl,[myArray +bx]
+	jb new_min
+	jmp end_min_loop
+new_min:
+	mov dl, [myArray+bx]
+end_min_loop:
+	inc bx
 	loop find_min_loop
+	
 	pop bx
 	pop cx
 	ret
