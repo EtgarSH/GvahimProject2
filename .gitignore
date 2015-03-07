@@ -5,6 +5,7 @@
 *.map
 *.exe
 *.obj
+*.tr
 
 # Personal Scripts
 *.bat

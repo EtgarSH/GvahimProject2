@@ -4,50 +4,59 @@
 ; Date   :  28/02/15
 ;------------------------------------------
 
-include "ArraysM.asm"
+;include "ArraysM.asm"
 
-proc NewMatrixProc ; bx - offset of matrix. al - rows. cl - columns.
-	push cx
-	push bx
-	push di
-	push si
-	
-	mov di, 0
-	mov si, bx
-	shl cl, 2 ; Mul by 2
-	NewArray si, cl
-	shr cl, 1 ; divide by 2
-	add bx, cl
-	inc bx
-ArraysCreation:
-	NewArray bx, al
-	SetWord si, di, bx
-	
-	inc di
-	add bx, al
-	inc bx
-	
-	loop ArraysCreation
-	
-	pop si
-	pop di
-	pop bx
-	pop cx
-	
-	ret
-endp NewMatrixProc
+;proc NewMatrixProc ; bx - offset of matrix. al - rows. cl - columns.
+;	push cx
+;	push bx
+;	push di
+;	push si
+;	push dx
+;	
+;	mov dl, 0
+;	mov si, bx
+;	
+;	shl cl, 1 ; Mul by 2
+;	NewArray si, cl
+;	shr cl, 1 ; divide by 2
+;	xor ch, ch
+;	add bx, cx
+;	inc bx
+;ArraysCreation:
+;	NewArray bx, al
+;	SetElement si, dl, bh
+;	inc si
+;	SetElement si, dl, bl
+;	dec si
+;	
+;	inc dl
+;	xor ah, ah
+;	add bx, ax
+;	inc bx
+;	
+;	loop ArraysCreation
+;	
+;	pop dx
+;	pop si
+;	pop di
+;	pop bx
+;	pop cx
+;	
+;	ret
+;endp NewMatrixProc
 
-proc GetColumns ; bx - offset. returns in cl - columns.
+proc GetColumnsProc ; bx - offset. returns in cl - columns.
 	GetLength bx
 	ret
-endp GetColumns
+endp GetColumnsProc
 
-proc GetRows ; bx - offset. returns in al - rows
+proc GetRowsProc ; bx - offset. returns in al - rows
 	push cx
 	push bx
 	
 	GetLength bx
-	add bx, cl
+	xor ch, ch
+	add bx, cx
 	inc bx
 	GetLength bx
 	shr cl, 1
@@ -57,18 +66,52 @@ proc GetRows ; bx - offset. returns in al - rows
 	pop cx
 	
 	ret
-endp GetRows
+endp GetRowsProc
 
-proc GetNodeProc ; bx - offset of matrix. ah - i. ch - j. al - element.
+proc SetNodeProc ; bx - offset of matrix. ah - j. ch - i. dl - element
 	push bx
+	push si
 	
 	push ax
-	GetWord bx, ch
-	mov bx, ax
-	pop ax
-	GetElement bx, ah
+	GetElement bx, ch
+	mov si, bx
 	
+	mov bh, al
+	SetElement bx, ah, dl
+	
+	pop si
 	pop bx
 	
 	ret
-endp GetNodeProc
+endp SetNodeProc
+
+;proc PrintMatrixProc ; bx - offset
+;	push ax
+;	push cx
+;	
+;	call GetColumnsProc
+;	call GetRowsProc
+;	
+;	mov ah, 0; i
+;ColumnsLoop:
+;	mov ch, 0; j
+;RowsLoop:
+;	call GetNodeProc
+;	Write al
+;	Write ' '
+;
+;	inc ch
+;	cmp ch, cl
+;	jnz RowsLoop
+;	
+;	Write 10
+;	
+;	inc ah
+;	cmp ah, al
+;;	jnz ColumnsLoop
+;	
+;	pop cx
+;	pop ax
+;	
+;	ret
+;endp PrintMatrixProc

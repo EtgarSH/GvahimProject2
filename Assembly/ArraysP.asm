@@ -55,23 +55,23 @@ proc GetLengthProc ; bx - offset of array, returns length in cl
 	ret
 endp GetLengthProc
 
-proc GetElementProc ; bx - offset of array. si - index. returns the element in al.
+proc GetElementProc ; bx - offset of array. cl - index. returns the element in al.
 	push cx
 	push si
+	push bx
 	
 	call CheckOutOfRange
 	
 	inc si
-	mov al, [byte ptr bx+si]
+	xor ch, ch
+	add bx, cx
+	mov al, [byte ptr bx]
 
+	pop bx
 	pop si
 	pop cx
 	ret
 endp GetElementProc
-
-proc GetWordProc ; coming soon
-	
-endp GetWordProc
 
 proc SetElementProc ; bx - offset. si - index. dl - element.
 	push si
@@ -196,5 +196,7 @@ EndPrintArray:
 	pop bx
 	pop dx
 	pop cx
+	
+	Write 10
 	ret
 endp PrintArrayProc
