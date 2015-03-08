@@ -45,46 +45,169 @@
 ;	ret
 ;endp NewMatrixProc
 
-proc GetColumnsProc ; bx - offset. returns in cl - columns.
-	GetLength bx
-	ret
-endp GetColumnsProc
-
-proc GetRowsProc ; bx - offset. returns in al - rows
-	push cx
+proc NewMatrixProc ; bx - matrix. ah - rows. al - columns.
+	push dx
+	push si
 	push bx
-	
-	GetLength bx
-	xor ch, ch
-	add bx, cx
+	push ax
+
+	shl ah, 1
+	NewArray bx, ah ; pointers array
+	mov si, bx ; save the pointers array offset
+	add bl, ah
 	inc bx
-	GetLength bx
-	shr cl, 1
-	mov al, cl
+	shr ah, 1
 	
-	pop bx
+	push cx
+	mov cl, ah
+	xor ch, ch
+ColumnsCreation:
+	NewArray bx, al
+	
+	push ax
+	sub ah, cl
+	shl ah, 1
+	push cx
+	mov ch, ah
+	SetElement si, ch, bh
+	inc ah
+	mov ch, ah
+	SetElement si, ah, bl
+	pop cx
+	pop ax
+	
+	add bl, al
+	inc bx
+	loop ColumnsCreation
+	
 	pop cx
 	
+	pop ax
+	pop bx
+	pop si
+	pop dx
+	
+	ret
+endp NewMatrixProc
+
+proc GetRowsProc ; bx - matrix. Signs in ah solution.
+	push bx
+	push cx
+	
+	GetLength bx
+	shr cl, 1
+	mov ah, cl
+	
+	pop cx
+	pop bx
 	ret
 endp GetRowsProc
 
-proc SetNodeProc ; bx - offset of matrix. ah - j. ch - i. dl - element
+proc GetColumnsProc ; bx - matrix. Signs in al solution.
 	push bx
+	push cx
+	push ax
+	
+	call GetRowsProc
+	shl ah, 1
+	add bl, ah
+	inc bx
+	inc bx
+	
+	
+	GetLength bx
+	pop ax
+	mov al, cl
+	
+	pop cx
+	pop bx
+	ret
+endp GetColumnsProc
+
+proc GetNodeProc ; si - matrix. ch - i. dh - j. Signs in al.
 	push si
+	push bx
+	push cx
+	push dx
 	
 	push ax
-	GetElement bx, ch
-	mov si, bx
 	
+	shl ch, 1
+	GetElement si, ch
 	mov bh, al
-	SetElement bx, ah, dl
+	inc ch
+	GetElement si, ch
+	mov bl, al
 	
-	pop si
+	pop ax
+	GetElement bx, dh
+	
+	pop dx
+	pop cx
 	pop bx
+	pop si
+	
+	ret
+endp GetNodeProc
+
+proc SetNodeProc ; si - matrix. ch - i. dh - j. dl - Element.
+	push si
+	push bx
+	push cx
+	push dx
+	
+	push ax
+	
+	shl ch, 1
+	GetElement si, ch
+	mov bh, al
+	inc ch
+	GetElement si, ch
+	mov bl, al
+	
+	pop ax
+	SetElement bx, dh, dl
+	
+	pop dx
+	pop cx
+	pop bx
+	pop si
 	
 	ret
 endp SetNodeProc
 
+proc PrintMatrixProc ; si - matrix
+	push dx
+	push ax
+	push cx
+	push bx
+	
+	mov bx, si
+	call GetRowsProc
+	xor ch, ch
+	mov cl, ah
+	mov dh, 0
+RowsLoop:
+	shl dh, 1
+	GetElement si, dh
+	mov bh, al
+	inc dh
+	GetElement si, dh
+	mov bl, al
+	inc dh
+	shr dh, 1
+	
+	PrintArray bx
+	
+	loop RowsLoop
+	
+	pop bx
+	pop cx
+	pop ax
+	pop dx
+	
+	ret
+endp PrintMatrixProc
 ;proc PrintMatrixProc ; bx - offset
 ;	push ax
 ;	push cx

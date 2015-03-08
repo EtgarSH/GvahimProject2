@@ -4,46 +4,21 @@
 ; Date   :  28/02/15
 ;------------------------------------------
 
-macro NewMatrix Location, Columns, Rows
-	push cx
-	push si
-
-	shl Columns, 1
-	NewArray Location, Columns
-	mov si, Location
-	Location = Location+Columns+1	
-	shr Columns, 1
+macro NewMatrix matrix, rows, columns
+	push bx
+	push ax
 	
-	local ArraysCreation
-	mov cl, 0
-ArraysCreation:
-	NewArray Location, Rows
-	SetElement si, cl, Location
-	Location = Location + Rows + 1
+	mov bx, matrix
+	mov ah, rows
+	mov al, columns
 	
-	inc cl
-	cmp cl, Columns
-	jnz ArraysCreation
+	call NewMatrixProc
 	
-	pop si
-	pop cx
+	pop ax
+	pop bx
 endm NewMatrix
-;macro NewMatrix Location, Rows, Columns
-;	push bx
-;	push ax
-;	push cx
-;	
-;	mov bx, Location
-;	mov al, Rows
-;	mov cl, Columns
-;	call NewMatrixProc
-;	
-;	pop cx
-;	pop ax
-;	pop bx
-;endm NewMatrix
 
-macro GetColumns Matrix ; return in cl
+macro GetColumns Matrix ; return in al
 	push bx
 	
 	mov bx, Matrix
@@ -52,7 +27,7 @@ macro GetColumns Matrix ; return in cl
 	pop bx
 endm GetColumns
 
-macro GetRows Matrix
+macro GetRows Matrix ; returns in ah
 	push bx
 	
 	mov bx, Matrix
@@ -61,37 +36,39 @@ macro GetRows Matrix
 	pop bx
 endm GetRows
 
-;macro GetNode Matrix, i, j ; return in al
-;	push bx
-;	push ax
-;	push cx
-;	
-;	mov bx, Matrix
-;	mov ch, i
-;	mov ah, j
-;	call GetNodeProc
-;	
-;	pop cx
-;	pop ax
-;	pop bx
-;endm GetNode
-
-macro SetNode Matrix, i, j, Element
-	push bx
+macro GetNode Matrix, i, j ; return in al
+	push si
 	push ax
 	push cx
 	push dx
 	
-	mov bx, Matrix
+	mov si, Matrix
 	mov ch, i
-	mov ah, j
+	mov dh, j
+	call GetNodeProc
+	
+	pop dx
+	pop cx
+	pop ax
+	pop si
+endm GetNode
+
+macro SetNode Matrix, i, j, Element
+	push si
+	push ax
+	push cx
+	push dx
+	
+	mov si, Matrix
+	mov ch, i
+	mov dh, j
 	mov dl, Element
 	call SetNodeProc
 	
 	pop dx
 	pop cx
 	pop ax
-	pop bx
+	pop si
 endm SetNode
 
 macro PrintMatrix Matrix
@@ -103,48 +80,11 @@ macro PrintMatrix Matrix
 	pop bx
 endm PrintMatrix
 
-macro GetNode Matrix, i, j ; return in al
-	push bx
-	push cx
-
-	GetElement Matrix, i
-	mov bh, al
-	mov cl, i
-	inc cl
-	GetElement Matrix, cl
-	mov bl, al
-	
-	GetElement bx, j
-	
-	pop cx
-	pop bx
-endm GetNode
-
 macro PrintMatrix Matrix
-	push ax
-	push dx
-	
-	mov ah, 0 ; i
-local RowsLoop:
-	mov ch, 0 ; j
-local ColumnsLoop:
-	GetNode Matrix, ah, ch
-	Write al
-	add al, 30h
-	Write ' '
-	
-	inc ch
-	cmp ch, 4
-	jnz ColumnsLoop
-	
-	Write 10
-	
-	inc ah
-	cmp ah, 3
-	jnz RowsLoop
-	
-	pop dx
-	pop ax
+	push si
+	mov si, Matrix
+	call PrintMatrixProc
+	pop si
 endm PrintMatrix
 
 ;include "MatrixP.asm"
