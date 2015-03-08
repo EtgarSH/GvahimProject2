@@ -94,7 +94,7 @@ start:
 			cmp dh,0
 			je error_tab_part1
 			call ascii_to_hex
-			set_matrix_value dl dh al ;----------------------------------------- 
+			SetNode Matrix dl dh al 
 			jmp end_get_Matrix_columsLoop
 			error_tab_part1:
 				WriteLine error_message
@@ -190,7 +190,7 @@ include "ArraysP.asm"
 include "MatrixP.asm"
 
 proc print_matrix_indexProc
-	Ger_matrix_value al ah ;------------------------------------goes to al
+	GetNode Matrix al ah
 	Write al
 	ret
 endp print_matrix_indexProc
@@ -203,7 +203,7 @@ proc get_num_of_showsProc ;Returns the num of shows in dl num in al;
 		push cx
 		mov cx Matrix_colums
 		get_num_of_shows_colums:
-		GEt_matrixvalue dl dh ;lets say it goes to al------------------------------------------------------------
+		GetNode Matrix dl dh
 		cmp ah,al 
 		je add_one
 		jmp end_get_num_of_shows_colums
@@ -224,15 +224,15 @@ proc get_max_valueProc ;Returns the max value of shows in dl
 	push cx
 	xor dx,dx
 	mov cx,Matrix_rows
-	get_Matrix_value 0 0;----------------------------------------------------goes to al
+	GetNode Matrix 0 0
 	mov ah,al
 	get_Matrix_max_rows: ;dh=rows; dl=colums; ah min value
 		push cx
 		mov cx, Matrix_colums
 		get_Matrix_max_colums:
-			get_Matrix_value dh dl;----------------------------------------------------goes to al
+			GetNode Matrix dh dl
 			cmp ah,al
-			jnb end_get_Matrix_max_colums
+			jna end_get_Matrix_max_colums
 			mov ah,al
 			end_get_Matrix_max_colums:
 			inc dl
@@ -249,13 +249,13 @@ proc get_min_valueProc ;Returns the min value of shows in dl
 	push cx
 	xor dx,dx
 	mov cx,Matrix_rows
-	get_Matrix_value 0 0;----------------------------------------------------goes to al
+	GetNode Matrix 0 0
 	mov ah,al
 	get_Matrix_min_rows: ;dh=rows; dl=colums; ah min value
 		push cx
 		mov cx, Matrix_colums
 		get_Matrix_min_colums:
-			get_Matrix_value dh dl;----------------------------------------------------goes to al
+			GetNode Matrix dh dl
 			cmp ah,al
 			jnb end_get_Matrix_min_colums
 			mov ah,al
@@ -290,13 +290,13 @@ proc ascii_to_hex ;Value in al and result too
 	cmp dl,1
 	je char_to_hex
 	 
-	sub al,(20+?);---------------------------------------------------------------------------
+	sub al,4Bh
 	jmp end_ascii_to_hexProc
 	num_to_hex:
 	sub al,30h
 	jmp end_ascii_to_hexProc
 	char_to_hex:
-	sub al,(?);---------------------------------------------------------------------------
+	sub al,37h
 	end_ascii_to_hexProc:
 endp ascii_to_hex
 
@@ -307,7 +307,7 @@ proc print_hexProc ;the value in al
 	Write al
 	jmp end_print_hexProc
 	print_char:
-	add al,(???);---------------------------------
+	add al,37h
 	Write al
 	end_print_hexProc:
 	ret
@@ -320,8 +320,8 @@ proc print_matrixProc ;dh =row dl=colum
 	push cx
 	mov ax,Matrix_colums
 		print_matrixColums:
-			get_matrix_value dl dh ;---------------------------------------------------------lets say it goes to al
-			call print_hexProc;--------------------------------------------------------------
+			GetNode Matrix dl dh
+			call print_hexProc
 			inc dl
 		loop print_matrixColums
 	pop cx
@@ -342,7 +342,7 @@ proc get_place ;al is the value
 		mov dl,1h
 		jmp get_place_rows
 		get_place_colums:
-			get_Matrix_value dh dl ;to al ------------------------------------------------------------------------
+			GetNode Matrix dh dl
 			cmp ah,al
 			je place_found
 			inc dl
