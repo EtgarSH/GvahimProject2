@@ -28,8 +28,6 @@ proc WriteLineProc ; dx is the offset of string
 	push ax
 	
 	push dx
-	mov dl, 10
-	call WriteProc
 	pop dx
 	
 	mov ah, 9
@@ -57,9 +55,6 @@ proc ReadKeyProc ; returns in al the key ASCII code
 	push dx
 	push ax
 	
-	;mov dl, 10
-	;call WriteProc
-	
 	mov ah, 8
 	int 21h
 	
@@ -75,6 +70,18 @@ proc ReadKeyProc ; returns in al the key ASCII code
 	pop dx
 	ret
 endp ReadKeyProc
+
+proc ReadKey_show_charProc ; returns in al the key ASCII code
+	push dx
+	push ax
+	mov ah,1h
+	int 21h
+	mov dl,al
+	pop ax
+	mov al,dl
+	pop dx
+	ret
+endp ReadKey_show_charProc
 
 proc EnterVGAModeProc
 	push ax

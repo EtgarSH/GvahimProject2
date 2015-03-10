@@ -41,8 +41,12 @@ macro ReadLine Buffer
 endm ReadLine
 
 macro ReadKey
-	call ReadKey
+	call ReadKeyProc
 endm ReadKey
+
+macro ReadKey_show_char
+	call ReadKey_show_charProc
+endm ReadKey_show_char
 
 macro EnterVGAMode
 	call EnterVGAModeProc
