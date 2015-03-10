@@ -54,8 +54,8 @@ endm EnterVGAMode
 
 macro SetBackgroundColor Color
 	push bx
-	
-	mov bx, Color
+	xor bh,bh
+	mov bl, Color
 	call SetBackgroundColorProc
 	
 	pop bx
