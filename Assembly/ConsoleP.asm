@@ -57,8 +57,8 @@ proc ReadKeyProc ; returns in al the key ASCII code
 	push dx
 	push ax
 	
-	mov dl, 10
-	call WriteProc
+	;mov dl, 10
+	;call WriteProc
 	
 	mov ah, 8
 	int 21h

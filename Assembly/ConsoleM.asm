@@ -25,7 +25,7 @@ endm WriteSeq
 macro WriteLine Location
 	push dx
 	
-	mov dx, Location
+	mov dx, [Location]
 	call WriteLineProc
 	
 	pop dx
@@ -34,7 +34,7 @@ endm WriteLine
 macro ReadLine Buffer
 	push dx
 	
-	mov dx, Buffer
+	mov dx, [Buffer]
 	call ReadLineProc
 	
 	pop dx
