@@ -24,7 +24,7 @@ proc NewMatrixProc ; bx - matrix. ah - rows. al - columns.
 	
 	mov cl, ah
 	xor ch, ch
-ColumnsCreation:
+RowsCreation:
 	NewArray bx, al
 	
 	push cx
@@ -37,23 +37,27 @@ ColumnsCreation:
 	shl cl, 1
 	
 	push dx
-	push bx
-	mov bx, di
 	
 	mov dl, bh
+	push bx
+	mov bx, di
 	call SetElementProc ; set higher offset
+	pop bx
 	
 	inc cl
 	
 	mov dl, bl
+	push bx
+	mov bx, di
 	call SetElementProc ; set lower offset
 	pop bx
+	
 	pop dx
 	
 	pop cx
 	add bl, al
 	inc bx
-	loop ColumnsCreation
+	loop RowsCreation
 	
 	pop ax
 	pop bx
