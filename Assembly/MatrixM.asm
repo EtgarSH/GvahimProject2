@@ -69,15 +69,6 @@ macro SetNode Matrix, i, j, Element
 	pop di
 endm SetNode
 
-macro PrintMatrix Matrix
-	push bx
-	
-	mov si, Matrix
-	call PrintMatrixProc
-	
-	pop bx
-endm PrintMatrix
-
 ;macro PrintMatrix Matrix
 ;	push si
 ;	mov si, Matrix
