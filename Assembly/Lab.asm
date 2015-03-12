@@ -14,10 +14,11 @@ start:
 	mov ax, @data
 	mov ds, ax
 	
-	NewMatrix myMatrix, 3, 2; myMatrix = new int[3, 2]
-	;GetNode myMatrix, 2, 1 ; int al = myMatrix[2, 1]
-	;add al, 30h
-	;Write al
+	NewMatrix myMatrix, 3, 2
+	SetNode myMatrix, 2, 1, 3
+	GetNode myMatrix, 2, 1
+	add al, 30h
+	Write al
 exit:
 	mov ax, 4c00h
 	int 21h

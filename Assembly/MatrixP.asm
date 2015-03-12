@@ -126,6 +126,7 @@ proc GetNodeProc; di - matrix. ch - i. dh - j
 endp GetNodeProc
 
 proc SetNodeProc ; di - matrix. ch - i. dh - j. dl - Element.
+	push bx
 	push cx
 
 	shl ch, 1
@@ -139,43 +140,11 @@ proc SetNodeProc ; di - matrix. ch - i. dh - j. dl - Element.
 	
 	mov si, [word ptr toSend]
 	
-	push bx
 	mov bx, si
+	mov cl, dh
 	call SetElementProc
-	pop bx
 	
 	pop cx
-	
+	pop bx
 	ret
 endp SetNodeProc
-
-;proc PrintMatrixProc ; bx - offset
-;	push ax
-;	push cx
-;	
-;	call GetColumnsProc
-;	call GetRowsProc
-;	
-;	mov ah, 0; i
-;ColumnsLoop:
-;	mov ch, 0; j
-;RowsLoop:
-;	call GetNodeProc
-;	Write al
-;	Write ' '
-;
-;	inc ch
-;	cmp ch, cl
-;	jnz RowsLoop
-;	
-;	Write 10
-;	
-;	inc ah
-;	cmp ah, al
-;;	jnz ColumnsLoop
-;	
-;	pop cx
-;	pop ax
-;	
-;	ret
-;endp PrintMatrixProc
