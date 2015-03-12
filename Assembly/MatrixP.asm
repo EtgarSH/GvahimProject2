@@ -117,6 +117,7 @@ proc GetNodeProc; di - matrix. ch - i. dh - j
 	
 	push bx
 	mov bx, si
+	mov cl, dh
 	call GetElementProc
 	pop bx
 	
