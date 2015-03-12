@@ -10,7 +10,8 @@ ofre equ offset outOfRangeMsg
 
 CodeSeg
 proc IndexOutOfRangeException
-	WriteLine ofre
+	;WriteLine ofre
+	Write '>'
 	mov ax, 4c00h
 	int 21h
 endp IndexOutOfRangeException

@@ -18,6 +18,9 @@ DATASEG
 	
 	Not_foundDS db 0ah,'Value doesnt exist',0ah,'$'
 	Not_found dw offset Not_foundDS
+	
+	part2MessageDS db 0ah,'Enter input',0ah,'$'
+	part2Message dw offset part2MessageDS
 		
 	sumArrayDS db 10 dup (?)
 	sumArray equ offset sumArrayDS
@@ -67,7 +70,7 @@ start:
 	mov ax, @data
 	mov ds, ax
 	;part1
-	NewMarix Matrix, 6, 4 ;מימוש המטריצה
+	NewMatrix Matrix, 6, 4
 	NewArray sumArray 6
 Part_1:
 	WriteLine enter_values
@@ -88,6 +91,7 @@ get_Matrix_rows: ;dh=rows; dl=colums
 	loop get_Matrix_rows
 	;Part 2
 part_2:
+	WriteLine part2Message
 	down_line
 	ReadLine part_2_input 
 	
@@ -123,54 +127,45 @@ print_matrix:
 	call print_matrixProc
 	jmp part_2
 print_matrix_index:
-	mov al,[part_2_inputDS +2]
-	mov ah,[part_2_inputDS +4]
-	sub al,31
-	sub ah,31
-	print_space
 	call print_matrix_indexProc
 	jmp part_2
 end_part_two_between:
 	jmp end_part_two
 
 print_num_Of_shows:
+	mov al,[part_2_inputDS +3]
+	call Check_if_value_is_hex
+	cmp dh,0
+	je error_tab_between
+	sub al,30h
 	call get_num_of_showsProc
-	print_space
-	Write dl
+	mov al,dl
+	call print_unknow_leght_number
 	jmp part_2
 print_max_value:
 	call get_max_valueProc
-	print_space
-	Write dl
+	mov al,ah
+	call print_hexProc
 	jmp part_2
 print_min_value:
 	call get_min_valueProc
-	print_space
-	Write dl
+	mov al,ah
+	call print_hexProc
+	jmp part_2
 	jmp part_2
 error_tab_between: ;je can't get to the lable.
 	jmp error_tab
 Not_found_tab_between: ;je can't get to the lable.
 	jmp Not_found_tab
 check_value:
-Write 'C'
-	xor dx,dx
-	check_value_range '0', '9',al 
-	add dh,dl
-	check_value_range 'A', 'F',al 
-	add dh,dl
-	check_value_range 'a', 'f',al 
-	add dh,dl
+	call Check_if_value_is_hex
 	cmp dh,0
 	je error_tab_between
+	call ascii_to_hex
 	call get_place
-	cmp dl,1
-	jne Not_found_tab_between
-	add al,30h
-	add ah,30h
-	Write ah
-	print_space
-	Write al
+back: ;There was an error and that was the only way to solve it.
+	cmp bl,15h
+	je Not_found_tab_between
 	jmp part_2
 end_part_two:
 
@@ -184,15 +179,11 @@ include "ArraysP.asm"
 include "MatrixP.asm"
 proc get_Matrix_columsProc
 get_Matrix_colums:
+get_Matrix_columsstart:
 	ReadKey_show_char 
 	push dx
 	xor dx,dx ;Checking if the input is legal.
-	check_value_range '0', '9',al 
-	add dh,dl
-	check_value_range 'A', 'F',al 
-	add dh,dl
-	check_value_range 'a', 'f',al 
-	add dh,dl
+	call Check_if_value_is_hex
 	cmp dh,0
 	je error_tab_part1
 	call ascii_to_hex ;Change the input to ascii
@@ -200,22 +191,34 @@ get_Matrix_colums:
 	SetNode Matrix dh dl al
 	jmp end_get_Matrix_columsLoop
 error_tab_part1:
-		WriteLine error_message
-		jmp get_Matrix_colums
+	pop dx
+	WriteLine error_message
+	jmp get_Matrix_columsstart
 end_get_Matrix_columsLoop:
 	inc dl
 	print_space
 	loop get_Matrix_colums
-	xor dh,dh
+	xor dl,dl
 	ret
 endp get_Matrix_columsProc
 proc print_matrix_indexProc
+	mov al,[part_2_inputDS +4]
+	check_value_range '0' '9' al
+	cmp dl,0h
+	je error_pring_message
+	mov al,[part_2_inputDS +2]
+	check_value_range '0' '9' al
+	cmp dl,0h
+	je error_pring_message
+	mov ah,[part_2_inputDS +4]
+	sub al,31h
+	sub ah,31h
 	cmp al,6
 	ja error_pring_message
 	cmp ah,4
 	ja error_pring_message
 	GetNode Matrix al ah
-	Write al
+	call print_hexProc
 	jmp print_matrix_indexProcend
 error_pring_message:
 	WriteLine error_message
@@ -244,13 +247,16 @@ endp print_matrixProc
 proc get_num_of_showsProc ;Returns the num of shows in dl num in al;
 	mov ah,al
 	mov cx,Matrix_rows
-get_num_of_shows_rows: ;dh=rows; dl=colums; ah=num
 	xor bx,bx
+	xor dx,dx
+get_num_of_shows_rows: ;dh=rows; dl=colums; ah=num
 	push cx
 	mov cx, Matrix_colums
 get_num_of_shows_colums:
-	GetNode Matrix dl dh
-	cmp ah,al 
+	push bx
+	GetNode Matrix dh dl
+	pop bx
+	cmp ah,al
 	je add_one
 	jmp end_get_num_of_shows_colums
 add_one:
@@ -258,8 +264,8 @@ add_one:
 end_get_num_of_shows_colums:
 	inc dl
 	loop get_num_of_shows_colums
+	xor dl,dl
 	pop cx
-	down_line
 	inc dh
 	loop get_num_of_shows_rows
 	mov dl,bl
@@ -272,17 +278,18 @@ proc get_max_valueProc ;Returns the max value of shows in dl
 	mov cx,Matrix_rows
 	GetNode Matrix 0 0
 	mov ah,al
-get_Matrix_max_rows: ;dh=rows; dl=colums; ah min value
+get_Matrix_max_rows: ;dh=rows; dl=colums; ah max value
 	push cx
 	mov cx, Matrix_colums
 get_Matrix_max_colums:
 	GetNode Matrix dh dl
 	cmp ah,al
-	jna end_get_Matrix_max_colums
+	jnb end_get_Matrix_max_colums
 	mov ah,al
 end_get_Matrix_max_colums:
 	inc dl
 	loop get_Matrix_max_colums
+	xor dl,dl
 	pop cx
 	inc dh
 	loop get_Matrix_max_rows
@@ -303,11 +310,12 @@ get_Matrix_min_rows: ;dh=rows; dl=colums; ah min value
 get_Matrix_min_colums:
 	GetNode Matrix dh dl
 	cmp ah,al
-	jnb end_get_Matrix_min_colums
+	jna end_get_Matrix_min_colums
 	mov ah,al
 end_get_Matrix_min_colums:
 	inc dl
 	loop get_Matrix_min_colums
+	xor dl,dl
 	pop cx
 	inc dh
 	loop get_Matrix_min_rows
@@ -319,6 +327,7 @@ endp get_min_valueProc
 proc print_unknow_leght_number ;Num is in al 
 ;This proc get an value (in al) in hex. The program is printing the value in dec.
 	to_dec_from_hex al
+	xor ah,ah
 	ror ax,4
 	shr ah,4
 	add ah,30h
@@ -336,7 +345,7 @@ proc ascii_to_hex ;Value in al and result too
 	check_value_range 'A', 'F',al 
 	cmp dl,1
 	je char_to_hex
-	sub al,4Bh
+	sub al,57h
 	jmp end_ascii_to_hexProc
 num_to_hex:
 	sub al,30h
@@ -363,27 +372,45 @@ endp print_hexProc
 
 proc get_place ;al is the value
 ;This proc gets a value and find the first index in the matrix the equal to the value.
-;If the value haven't been found the program will print an error message.
+;If the value haven't been found the program will print an error message.	
+rept 100
+mov dx,10h
+endm
 	xor dx,dx
 	mov ah,al
 	mov cx,Matrix_rows
-get_place_rows: ;dh=rows; dl=colums
+get_place_rows:
 	push cx
-	mov cx, Matrix_colums
-	jmp get_place_colums
-place_found:
-	mov dl,1h
-	jmp get_place_rows
+	mov cx,Matrix_colums
 get_place_colums:
 	GetNode Matrix dh dl
 	cmp ah,al
-	je place_found
+	je found
 	inc dl
 	loop get_place_colums
+	xor dl,dl
 	pop cx
 	inc dh
 	loop get_place_rows
-	end_get_placeProc:
+	mov bl,15h
+	jmp end_get_place
+	found:
+	add dx,3030h
+	Write dh
+	print_space
+	Write dl
+	end_get_place:
+	call back
 	ret
 endp get_place
+Proc Check_if_value_is_hex
+	xor dx,dx
+	check_value_range '0', '9',al 
+	add dh,dl
+	check_value_range 'A', 'F',al 
+	add dh,dl
+	check_value_range 'a', 'f',al 
+	add dh,dl
+	ret
+endp Check_if_value_is_hex
 END start
