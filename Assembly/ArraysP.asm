@@ -4,24 +4,26 @@
 ; Date   :  25/02/15
 ;------------------------------------------
 ; Test
+DataSeg
+outOfRangeMsg db 'Index out of range exception!$'
+ofre equ offset outOfRangeMsg
 
+CodeSeg
 proc IndexOutOfRangeException
-	int 2
+	WriteLine ofre
+	mov ax, 4c00h
+	int 21h
 endp IndexOutOfRangeException
 
-proc CheckOutOfRange ; bx - array. si - index.
+proc CheckOutOfRange ; bx - array. dh - index.
 	push cx
-	push si
 	
 	call GetLengthProc
-	dec cl
-	xor ch, ch
-	cmp si, cx
+	cmp dh, cl
 	jl NotOutOfRange
 	call IndexOutOfRangeException
 	
 NotOutOfRange:
-	pop si
 	pop cx
 	ret
 endp CheckOutOfRange
@@ -57,32 +59,33 @@ endp GetLengthProc
 
 proc GetElementProc ; bx - offset of array. cl - index. returns the element in al.
 	push cx
-	push si
 	push bx
 	
 	call CheckOutOfRange
-	
-	inc si
+
 	xor ch, ch
 	add bx, cx
+	inc bx
 	mov al, [byte ptr bx]
 
 	pop bx
-	pop si
 	pop cx
 	ret
 endp GetElementProc
 
-proc SetElementProc ; bx - offset. si - index. dl - element.
-	push si
+proc SetElementProc ; bx - offset. cl - index. dl - element.
+	push cx
+	push bx
 	
 	call CheckOutOfRange
-	
-	inc si
-	mov [byte ptr bx+si], dl
-	
-	pop si
-	
+
+	xor ch, ch
+	add bx, cx
+	inc bx
+	mov [byte ptr bx], dl
+
+	pop bx
+	pop cx
 	ret
 endp SetELementProc
 

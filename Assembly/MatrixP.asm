@@ -5,86 +5,59 @@
 ;------------------------------------------
 
 ;include "ArraysM.asm"
-
-;proc NewMatrixProc ; bx - offset of matrix. al - rows. cl - columns.
-;	push cx
-;	push bx
-;	push di
-;	push si
-;	push dx
-;	
-;	mov dl, 0
-;	mov si, bx
-;	
-;	shl cl, 1 ; Mul by 2
-;	NewArray si, cl
-;	shr cl, 1 ; divide by 2
-;	xor ch, ch
-;	add bx, cx
-;	inc bx
-;ArraysCreation:
-;	NewArray bx, al
-;	SetElement si, dl, bh
-;	inc si
-;	SetElement si, dl, bl
-;	dec si
-;	
-;	inc dl
-;	xor ah, ah
-;	add bx, ax
-;	inc bx
-;	
-;	loop ArraysCreation
-;	
-;	pop dx
-;	pop si
-;	pop di
-;	pop bx
-;	pop cx
-;	
-;	ret
-;endp NewMatrixProc
+dataseg
+	toSend dw 0
+codeseg
 
 proc NewMatrixProc ; bx - matrix. ah - rows. al - columns.
 	push dx
-	push si
+	push di
 	push bx
 	push ax
 
 	shl ah, 1
 	NewArray bx, ah ; pointers array
-	mov si, bx ; save the pointers array offset
+	mov di, bx ; save the pointers array offset
 	add bl, ah
 	inc bx
 	shr ah, 1
 	
-	push cx
 	mov cl, ah
 	xor ch, ch
 ColumnsCreation:
 	NewArray bx, al
 	
+	push cx
+	
 	push ax
 	sub ah, cl
-	shl ah, 1
-	push cx
-	mov ch, ah
-	SetElement si, ch, bh
-	inc ah
-	mov ch, ah
-	SetElement si, ah, bl
-	pop cx
+	mov cl, ah
 	pop ax
 	
+	shl cl, 1
+	
+	push dx
+	push bx
+	mov bx, di
+	
+	mov dl, bh
+	call SetElementProc ; set higher offset
+	
+	inc cl
+	
+	mov dl, bl
+	call SetElementProc ; set lower offset
+	pop bx
+	pop dx
+	
+	pop cx
 	add bl, al
 	inc bx
 	loop ColumnsCreation
 	
-	pop cx
-	
 	pop ax
 	pop bx
-	pop si
+	pop di
 	pop dx
 	
 	ret
@@ -124,90 +97,54 @@ proc GetColumnsProc ; bx - matrix. Signs in al solution.
 	ret
 endp GetColumnsProc
 
-proc GetNodeProc ; si - matrix. ch - i. dh - j. Signs in al.
-	push si
-	push bx
+proc GetNodeProc; di - matrix. ch - i. dh - j
 	push cx
-	push dx
-	
-	push ax
-	
+
 	shl ch, 1
-	GetElement si, ch
-	mov bh, al
-	inc ch
-	GetElement si, ch
-	mov bl, al
+	mov cl, ch
+	mov bx, di
+	call GetElementProc
+	mov [byte ptr toSend+1], al
+	inc cl
+	call GetElementProc
+	mov [byte ptr toSend], al
 	
-	pop ax
-	GetElement bx, dh
+	mov si, [word ptr toSend]
 	
-	pop dx
-	pop cx
+	push bx
+	mov bx, si
+	call GetElementProc
 	pop bx
-	pop si
+	
+	pop cx
 	
 	ret
 endp GetNodeProc
 
-proc SetNodeProc ; si - matrix. ch - i. dh - j. dl - Element.
-	push si
-	push bx
+proc SetNodeProc ; di - matrix. ch - i. dh - j. dl - Element.
 	push cx
-	push dx
-	
-	push ax
-	
+
 	shl ch, 1
-	GetElement si, ch
-	mov bh, al
-	inc ch
-	GetElement si, ch
-	mov bl, al
+	mov cl, ch
+	mov bx, di
+	call GetElementProc
+	mov [byte ptr toSend+1], al
+	inc cl
+	call GetElementProc
+	mov [byte ptr toSend], al
 	
-	pop ax
-	SetElement bx, dh, dl
+	mov si, [word ptr toSend]
 	
-	pop dx
-	pop cx
+	push bx
+	mov bx, si
+	call SetElementProc
 	pop bx
-	pop si
+	
+	pop cx
 	
 	ret
 endp SetNodeProc
 
-proc PrintMatrixProc ; si - matrix
-	push dx
-	push ax
-	push cx
-	push bx
-	
-	mov bx, si
-	call GetRowsProc
-	xor ch, ch
-	mov cl, ah
-	mov dh, 0
-RowsLoop:
-	shl dh, 1
-	GetElement si, dh
-	mov bh, al
-	inc dh
-	GetElement si, dh
-	mov bl, al
-	inc dh
-	shr dh, 1
-	
-	PrintArray bx
-	
-	loop RowsLoop
-	
-	pop bx
-	pop cx
-	pop ax
-	pop dx
-	
-	ret
-endp PrintMatrixProc
 ;proc PrintMatrixProc ; bx - offset
 ;	push ax
 ;	push cx

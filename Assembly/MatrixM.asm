@@ -37,29 +37,27 @@ macro GetRows Matrix ; returns in ah
 endm GetRows
 
 macro GetNode Matrix, i, j ; return in al
-	push si
-	push ax
+	push di
 	push cx
 	push dx
 	
-	mov si, Matrix
+	mov di, Matrix
 	mov ch, i
 	mov dh, j
 	call GetNodeProc
 	
 	pop dx
 	pop cx
-	pop ax
-	pop si
+	pop di
 endm GetNode
 
 macro SetNode Matrix, i, j, Element
-	push si
+	push di
 	push ax
 	push cx
 	push dx
 	
-	mov si, Matrix
+	mov di, Matrix
 	mov ch, i
 	mov dh, j
 	mov dl, Element
@@ -68,23 +66,23 @@ macro SetNode Matrix, i, j, Element
 	pop dx
 	pop cx
 	pop ax
-	pop si
+	pop di
 endm SetNode
 
 macro PrintMatrix Matrix
 	push bx
 	
-	mov bx, Matrix
+	mov si, Matrix
 	call PrintMatrixProc
 	
 	pop bx
 endm PrintMatrix
 
-macro PrintMatrix Matrix
-	push si
-	mov si, Matrix
-	call PrintMatrixProc
-	pop si
-endm PrintMatrix
+;macro PrintMatrix Matrix
+;	push si
+;	mov si, Matrix
+;	call PrintMatrixProc
+;	pop si
+;endm PrintMatrix
 
 ;include "MatrixP.asm"
