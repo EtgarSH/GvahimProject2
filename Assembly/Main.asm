@@ -29,6 +29,7 @@ CODESEG
 include "ConsoleM.asm"
 include "ArraysM.asm"
 include "MatrixM.asm"
+include "sound.asm"
 
 macro to_dec_from_hex value ; Result in al. ;The program gets a value and make it look like dec, that i'll be able to print an hex value in dec.
 ;Example: al=1Fh ---> al=31h
@@ -111,6 +112,11 @@ part_2:
 	je print_min_value
 	cmp al,'l'
 	je print_min_value
+	cmp al, 'm'
+	jne notMusicYea
+	call PlayMusic
+
+notMusicYea:
 	cmp al,'#'
 	je end_part_two_between
 	jmp check_value
@@ -177,6 +183,24 @@ exit:
 include "ConsoleP.asm"
 include "ArraysP.asm"
 include "MatrixP.asm"
+
+proc PlayMusic
+	call audio_open
+	call acsess
+	call speak1
+	call speak2
+	call speak3
+	call speak4
+	call speak5
+	call speak6
+	call speak7
+	call speak8
+	call speak9
+	call audio_closer
+	
+	ret
+endp PlayMusic
+
 proc get_Matrix_columsProc
 get_Matrix_colums:
 get_Matrix_columsstart:
