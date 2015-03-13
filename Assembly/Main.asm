@@ -1,3 +1,12 @@
+;------------------------------------------
+; File   :  Main.asm
+; Authors : Etgar, Ohad, Yonatan
+; Date   :  13/03/15
+; Description: This program should ask for input as a matric,
+; 		and should print an array of the sum of the rows.
+;		Try entering the input 'h' for help.
+;------------------------------------------
+
 IDEAL
 MODEL small
 STACK 100h
@@ -13,17 +22,26 @@ DATASEG
 	part_2_inputDS db 6 dup(4)
 	part_2_input dw offset part_2_inputDS
 	
-	error_messageDS db 0ah,'Illegal input',0ah,'$'
+	error_messageDS db 0ah,'Illegal input!',0ah,'$'
 	error_message dw offset error_messageDS
 	
-	enter_valuesDS db 'Enter values$'
+	enter_valuesDS db 'Enter values:$'
 	enter_values dw offset enter_valuesDS
 	
-	Not_foundDS db 0ah,'Value doesnt exist',0ah,'$'
+	Not_foundDS db 0ah,'Value does not exist.',0ah,'$'
 	Not_found dw offset Not_foundDS
 	
-	part2MessageDS db 0ah,'Enter input',0ah,'$'
+	part2MessageDS db 0ah,'Enter input (i for help)',0ah,'$'
 	part2Message dw offset part2MessageDS
+	
+	help db 'Help Page:', 10, '$'
+	helpGetNode db '[num] [num] - Get a node from the matrix.', 10
+	helpPrintMatrix db '? - Print your matrix.', 10
+	helpCounter db '? [num] - Get the counter of a specific number.', 10
+	helpHighest db 'h - Get the highest number in the matrix.', 10
+	helpLowest db 'l - Get the lowest number in the matrix.', 10
+	helpMusic db 'm - Play Music!!! (Part 3)', 10
+	helpExit db '# - Exit', 10, '$'
 		
 
 CODESEG
@@ -72,6 +90,7 @@ endm
 start:
 	mov ax, @data
 	mov ds, ax
+	EnterVGAMode
 	;part1
 	NewMatrix Matrix, 6, 4
 	;NewArray sumArrayOffset 6
@@ -119,11 +138,18 @@ part_2:
 	cmp al, 'm'
 	jne notMusicYea
 	call PlayMusic
+	jmp part_2
 
 notMusicYea:
+	cmp al, 'i'
+	jne NotHelp
+	call PrintHelp
+	jmp part_2
+NotHelp:
 	cmp al,'#'
 	je end_part_two_between
 	jmp check_value
+
 	
 error_tab:
 	down_line
@@ -441,4 +467,17 @@ Proc Check_if_value_is_hex
 	add dh,dl
 	ret
 endp Check_if_value_is_hex
+
+proc PrintHelp
+	push dx
+	
+	mov dx, offset help
+	WriteSeq dx
+	
+	mov dx, offset helpGetNode
+	WriteSeq dx
+	
+	pop dx
+	ret
+endp PrintHelp
 END start

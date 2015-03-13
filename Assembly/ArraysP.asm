@@ -3,7 +3,6 @@
 ; Author :  Etgar Shmueli
 ; Date   :  25/02/15
 ;------------------------------------------
-; Test
 DataSeg
 outOfRangeMsg db 'Index out of range exception!$'
 ofre equ offset outOfRangeMsg
