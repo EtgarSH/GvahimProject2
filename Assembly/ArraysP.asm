@@ -194,8 +194,15 @@ proc PrintArrayProc ; bx is the offset of the array
 	inc bx
 PrintArrayLoop:
 	mov dl, [byte ptr bx]
-	add dl, 30h
-	call WriteProc
+	
+	push ax
+	push cx
+	
+	mov al, dl
+	call print_unknow_leght_number
+	
+	pop cx
+	pop ax
 	
 	mov dl, ' '
 	call WriteProc
