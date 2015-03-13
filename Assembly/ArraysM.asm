@@ -75,14 +75,14 @@ macro Sort Array
 	pop bx
 endm Sort
 
-macro Sum Array ; returns in al the sum of the array
+macro SumArray Array ; returns in al the sum of the array
 	push bx
 	
 	mov bx, Array
 	call SumProc
 	
 	pop bx
-endm Sum
+endm SumArray
 
 macro Average Array
 	push bx

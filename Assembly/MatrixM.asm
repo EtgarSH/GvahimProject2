@@ -69,6 +69,17 @@ macro SetNode Matrix, i, j, Element
 	pop di
 endm SetNode
 
+macro SumRow Matrix, i
+	push di
+	push cx
+
+	mov di, Matrix
+	mov ch, i
+	call SumRowProc
+
+	pop cx
+	pop di
+endm SumRow
 ;macro PrintMatrix Matrix
 ;	push si
 ;	mov si, Matrix

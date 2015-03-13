@@ -104,16 +104,7 @@ endp GetColumnsProc
 proc GetNodeProc; di - matrix. ch - i. dh - j
 	push cx
 
-	shl ch, 1
-	mov cl, ch
-	mov bx, di
-	call GetElementProc
-	mov [byte ptr toSend+1], al
-	inc cl
-	call GetElementProc
-	mov [byte ptr toSend], al
-	
-	mov si, [word ptr toSend]
+	call GetRowProc
 	
 	push bx
 	mov bx, si
@@ -130,16 +121,7 @@ proc SetNodeProc ; di - matrix. ch - i. dh - j. dl - Element.
 	push bx
 	push cx
 
-	shl ch, 1
-	mov cl, ch
-	mov bx, di
-	call GetElementProc
-	mov [byte ptr toSend+1], al
-	inc cl
-	call GetElementProc
-	mov [byte ptr toSend], al
-	
-	mov si, [word ptr toSend]
+	call GetRowProc
 	
 	mov bx, si
 	mov cl, dh
@@ -149,3 +131,32 @@ proc SetNodeProc ; di - matrix. ch - i. dh - j. dl - Element.
 	pop bx
 	ret
 endp SetNodeProc
+
+proc GetRowProc ; di - matrix, ch - i
+	push cx
+	push bx
+	
+	shl ch, 1
+	mov cl, ch
+	mov bx, di
+	call GetElementProc
+	mov [byte ptr toSend+1], al
+	inc cl
+	call GetElementProc
+	mov [byte ptr toSend], al
+	mov si, [word ptr toSend]
+	
+	pop bx
+	pop cx
+	
+	ret
+endp GetRowProc
+
+proc SumRowProc ; di - matrix, ch - i
+
+	call GetRowProc
+	
+	SumArray si
+
+	ret
+endp SumRowProc
