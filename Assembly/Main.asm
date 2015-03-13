@@ -90,6 +90,16 @@ get_Matrix_rows: ;dh=rows; dl=colums
 	down_line
 	inc dh
 	loop get_Matrix_rows
+	
+	Mov cx,Matrix_rows
+	xor dl,dl
+sumLoop:
+	SumRow Matrix dl
+	SetElement SumArray dl al
+	Write al
+	inc dl
+	loop sumLoop
+	down_line
 	;Part 2
 part_2:
 	WriteLine part2Message
