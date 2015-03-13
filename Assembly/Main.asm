@@ -23,7 +23,7 @@ DATASEG
 	part2Message dw offset part2MessageDS
 		
 	sumArrayDS db 10 dup (?)
-	sumArray equ offset sumArrayDS
+	sumArrayOffset equ offset sumArrayDS
 CODESEG
 
 include "ConsoleM.asm"
@@ -72,7 +72,7 @@ start:
 	mov ds, ax
 	;part1
 	NewMatrix Matrix, 6, 4
-	NewArray sumArray 6
+	NewArray sumArrayOffset 6
 Part_1:
 	WriteLine enter_values
 	down_line
@@ -91,14 +91,16 @@ get_Matrix_rows: ;dh=rows; dl=colums
 	inc dh
 	loop get_Matrix_rows
 	
+	GetArrayOfSumas Matrix sumArrayOffset
 	Mov cx,Matrix_rows
-	xor dl,dl
-sumLoop:
-	SumRow Matrix dl
-	SetElement SumArray dl al
-	Write al
-	inc dl
-	loop sumLoop
+	xor bl,bl
+print_sum_array:
+	SumRow Matrix bl
+	GetElement sumArrayOffset bl
+	call print_unknow_leght_number
+	print_space
+	inc bl
+	loop print_sum_array
 	down_line
 	;Part 2
 part_2:
@@ -143,7 +145,7 @@ print_matrix:
 	call print_matrixProc
 	jmp part_2
 print_matrix_index:
-	call print_matrix_indexProc
+	call print_matrix_index_Proc
 	jmp part_2
 end_part_two_between:
 	jmp end_part_two
@@ -235,7 +237,7 @@ end_get_Matrix_columsLoop:
 	xor dl,dl
 	ret
 endp get_Matrix_columsProc
-proc print_matrix_indexProc
+proc print_matrix_index_Proc
 	mov al,[part_2_inputDS+3]
 	cmp al,' '
 	jne error_pring_message
@@ -256,12 +258,12 @@ proc print_matrix_indexProc
 	jae error_pring_message
 	GetNode Matrix al ah
 	call print_hexProc
-	jmp print_matrix_indexProcend
+	jmp print_matrix_indexProc_end
 error_pring_message:
 	WriteLine error_message
-print_matrix_indexProcend:
+print_matrix_indexProc_end:
 	ret
-endp print_matrix_indexProc
+endp print_matrix_index_Proc
 proc print_matrixProc ;dh =row dl=colum
 	xor dx,dx
 	mov cx, Matrix_rows
