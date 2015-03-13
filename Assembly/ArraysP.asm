@@ -10,7 +10,11 @@ ofre equ offset outOfRangeMsg
 
 CodeSeg
 proc IndexOutOfRangeException
-	WriteLine ofre
+	Write 'E'
+	Write 'R'
+	Write 'R'
+	Write 'O'
+	Write 'R'
 	mov ax, 4c00h
 	int 21h
 endp IndexOutOfRangeException
@@ -20,7 +24,7 @@ proc CheckOutOfRange ; bx - array. dh - index.
 	
 	call GetLengthProc
 	cmp dh, cl
-	jl NotOutOfRange
+	jle NotOutOfRange
 	call IndexOutOfRangeException
 	
 NotOutOfRange:

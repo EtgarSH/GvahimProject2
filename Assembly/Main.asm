@@ -7,6 +7,9 @@ DATASEG
 	Matrix_rows equ 6
 	Matrix_colums equ 4
 	
+	sumArrayDS db 20 dup (?)
+	sumArrayOffset equ offset sumArrayDS
+	
 	part_2_inputDS db 6 dup(4)
 	part_2_input dw offset part_2_inputDS
 	
@@ -22,8 +25,7 @@ DATASEG
 	part2MessageDS db 0ah,'Enter input',0ah,'$'
 	part2Message dw offset part2MessageDS
 		
-	sumArrayDS db 10 dup (?)
-	sumArrayOffset equ offset sumArrayDS
+
 CODESEG
 
 include "ConsoleM.asm"
@@ -72,7 +74,7 @@ start:
 	mov ds, ax
 	;part1
 	NewMatrix Matrix, 6, 4
-	NewArray sumArrayOffset 6
+	;NewArray sumArrayOffset 6
 Part_1:
 	WriteLine enter_values
 	down_line
@@ -91,23 +93,25 @@ get_Matrix_rows: ;dh=rows; dl=colums
 	inc dh
 	loop get_Matrix_rows
 	
-	GetArrayOfSumas Matrix sumArrayOffset
-	Mov cx,Matrix_rows
-	xor bl,bl
-print_sum_array:
-	SumRow Matrix bl
-	GetElement sumArrayOffset bl
-	call print_unknow_leght_number
-	print_space
-	inc bl
-	loop print_sum_array
-	down_line
+	GetArrayOfSums Matrix sumArrayOffset
+	PrintArray Matrix
+	
+	;Mov cx ,Matrix_rows
+	;xor bx,bx
+;print_sum_array:
+;	GetElement sumArrayOffset bl
+;	
+;	call print_unknow_leght_number
+;	print_space
+;	inc bl
+;	loop print_sum_array
+;	down_line
+	
 	;Part 2
 part_2:
 	WriteLine part2Message
 	down_line
 	ReadLine part_2_input 
-	
 	mov al,[part_2_inputDS +1] ;Mov al how many chars the user actually typed. Then, the progam checl what is the value and respond in accordance.
 	cmp al,3
 	je print_matrix_index

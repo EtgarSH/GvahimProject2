@@ -180,6 +180,34 @@ SumOfArraysLoop:
 	pop ax
 	
 	mov cl, ch
+
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	Write dl
 	call SetElementProc
 	
 	inc ch
