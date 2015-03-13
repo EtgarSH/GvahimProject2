@@ -95,18 +95,6 @@ get_Matrix_rows: ;dh=rows; dl=colums
 	
 	GetArrayOfSums Matrix sumArrayOffset
 	PrintArray sumArrayOffset
-	
-	;Mov cx ,Matrix_rows
-	;xor bx,bx
-;print_sum_array:
-;	GetElement sumArrayOffset bl
-;	
-;	call print_unknow_leght_number
-;	print_space
-;	inc bl
-;	loop print_sum_array
-;	down_line
-	
 	;Part 2
 part_2:
 	WriteLine part2Message
