@@ -80,6 +80,18 @@ macro SumRow Matrix, i
 	pop cx
 	pop di
 endm SumRow
+
+macro GetArrayOfSums Matrix, Array
+	push di
+	pop bx
+
+	mov di, Matrix
+	mov bx, Array
+	call GetArrayOfSumsProc
+	
+	pop bx
+	pop di
+endm GetArrayOfSums
 ;macro PrintMatrix Matrix
 ;	push si
 ;	mov si, Matrix

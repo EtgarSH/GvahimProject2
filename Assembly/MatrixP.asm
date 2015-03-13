@@ -160,3 +160,36 @@ proc SumRowProc ; di - matrix, ch - i
 
 	ret
 endp SumRowProc
+
+proc GetArrayOfSumsProc ; di - matrix, bx - offset of an empty array
+	push cx
+	push ax
+	push dx
+
+	push bx
+	mov bx, di
+	GetRows bx
+	pop bx
+	
+	NewArray bx, ah
+	xor ch, ch
+SumOfArraysLoop:
+	push ax
+	call SumRowProc
+	mov dl, al
+	pop ax
+	
+	mov cl, ch
+	call SetElementProc
+	
+	inc ch
+	
+	cmp ch, ah
+	jnz SumOfArraysLoop
+	
+	pop dx
+	pop ax
+	pop cx
+	
+	ret
+endp GetArrayOfSumsProc

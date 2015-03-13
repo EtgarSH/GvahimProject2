@@ -41,9 +41,7 @@ macro SetElement Array, Index, Elem
 	push ax
 	
 		
-	mov al, Index
-	xor ah, ah
-	mov si, ax
+	mov cl, Index
 	mov dl, Elem
 	mov bx, Array
 	call SetElementProc
