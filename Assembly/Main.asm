@@ -147,7 +147,7 @@ print_num_Of_shows:
 	call Check_if_value_is_hex
 	cmp dh,0
 	je error_tab_between
-	sub al,30h
+	call ascii_to_hex
 	call get_num_of_showsProc
 	mov al,dl
 	call print_unknow_leght_number
@@ -423,7 +423,7 @@ get_place_colums:
 	mov bl,15h
 	jmp end_get_place
 	found:
-	add dx,3030h
+	add dx,3131h
 	Write dh
 	print_space
 	Write dl
