@@ -80,8 +80,9 @@ endp GetElementProc
 proc SetElementProc ; bx - offset. cl - index. dl - element.
 	push cx
 	push bx
+	push dx
 	
-	;mov dh, cl
+	mov dh, cl
 	call CheckOutOfRange
 	
 	xor ch, ch
@@ -89,6 +90,7 @@ proc SetElementProc ; bx - offset. cl - index. dl - element.
 	inc bx
 	mov [byte ptr bx], dl
 
+	pop dx
 	pop bx
 	pop cx
 	ret
