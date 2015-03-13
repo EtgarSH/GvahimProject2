@@ -226,6 +226,9 @@ end_get_Matrix_columsLoop:
 	ret
 endp get_Matrix_columsProc
 proc print_matrix_indexProc
+	mov al,[part_2_inputDS+3]
+	cmp al,' '
+	jne error_pring_message
 	mov al,[part_2_inputDS +4]
 	check_value_range '0' '9' al
 	cmp dl,0h
@@ -234,13 +237,13 @@ proc print_matrix_indexProc
 	check_value_range '0' '9' al
 	cmp dl,0h
 	je error_pring_message
-	mov ah,[part_2_inputDS +4]
+	mov ah,[part_2_inputDS+4]
 	sub al,31h
 	sub ah,31h
 	cmp al,6
-	ja error_pring_message
+	jae error_pring_message
 	cmp ah,4
-	ja error_pring_message
+	jae error_pring_message
 	GetNode Matrix al ah
 	call print_hexProc
 	jmp print_matrix_indexProcend
@@ -383,7 +386,7 @@ endp ascii_to_hex
 proc print_hexProc ;the value in al
 ;This proc gets an value and printing it as hex.
 	cmp al,0ah
-	ja print_char
+	jae print_char
 	add al,30h
 	Write al
 	jmp end_print_hexProc
@@ -396,10 +399,7 @@ endp print_hexProc
 
 proc get_place ;al is the value
 ;This proc gets a value and find the first index in the matrix the equal to the value.
-;If the value haven't been found the program will print an error message.	
-rept 100
-mov dx,10h
-endm
+;If the value haven't been found the program will print an error message.
 	xor dx,dx
 	mov ah,al
 	mov cx,Matrix_rows
