@@ -1,17 +1,4 @@
-CODESEG
-	call audio_open
-	call acsess
-	call speak1
-	call speak2
-	call speak3
-	call speak4
-	call speak5
-	call speak6
-	call speak7
-	call speak8
-	call speak9
-	call audio_closer
-	 
+CODESEG 
 	;speakers ****************************************
 	;every proc end in high-light noise to create diffrence betwin the sound in the reading
 	;in all of the loops the is only one xor, the reason is that when overfloat as the plans the cx value returns to the zero value and by that xor the loop.
