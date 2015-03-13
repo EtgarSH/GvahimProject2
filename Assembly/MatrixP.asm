@@ -207,7 +207,7 @@ SumOfArraysLoop:
 	nop
 	nop
 	nop
-	Write dl
+	;Write dl
 	call SetElementProc
 	
 	inc ch

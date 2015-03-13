@@ -18,11 +18,11 @@ start:
 	mov ax, @data
 	mov ds, ax
 	
-	NewMatrix myMatrix, 3, 2
-	SetNode myMatrix, 2, 1, 3
-	SetNode myMatrix, 2, 0, 2
-	SetNode myMatrix 1, 0, 8
-	SetNode myMatrix 1, 1, 1
+	NewMatrix myMatrix, 6, 4
+	SetNode myMatrix, 0, 0, 1
+	SetNode myMatrix, 0, 1, 2
+	SetNode myMatrix, 1, 0, 9
+	SetNode myMatrix, 1, 1, 4
 	GetArrayOfSums myMatrix, myArray
 	PrintArray myArray
 exit:

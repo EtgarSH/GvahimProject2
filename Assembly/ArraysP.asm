@@ -81,6 +81,7 @@ proc SetElementProc ; bx - offset. cl - index. dl - element.
 	push cx
 	push bx
 	
+	;mov dh, cl
 	call CheckOutOfRange
 	
 	xor ch, ch

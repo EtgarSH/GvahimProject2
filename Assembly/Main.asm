@@ -94,7 +94,7 @@ get_Matrix_rows: ;dh=rows; dl=colums
 	loop get_Matrix_rows
 	
 	GetArrayOfSums Matrix sumArrayOffset
-	PrintArray Matrix
+	PrintArray sumArrayOffset
 	
 	;Mov cx ,Matrix_rows
 	;xor bx,bx
